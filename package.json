@@ -1,0 +1,19 @@
+{
+  "name": "iesnotesjs",
+  "version": "1.0.0",
+  "description": "sent notes to push services",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "barkan leon",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "git": "^0.1.5",
+    "mongoose": "^5.0.6"
+  }
+}
