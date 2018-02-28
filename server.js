@@ -60,13 +60,12 @@ app.post('/GetNotes',(req,res) => {
 
     // See documentation on defining a message payload.
     var message = {
-        data: req.body
-        ,
+        data: req.body,
         notification:{
             body: 'Notification body'
         },
         topic: topic
-        };
+    };
 
     // Send a message to devices subscribed to the provided topic.
     admin.messaging().send(message)
@@ -81,5 +80,4 @@ app.post('/GetNotes',(req,res) => {
 
 app.listen(port, ()=>{
     console.log('IESNotes server is running on port : ', port);
-
 });

@@ -13,7 +13,13 @@ var User = mongoose.model('User',{
         required: true,
         minlength: 1,
         trim: true
-    }
+    },
+    JobSeekerID: {
+        type: Number,
+        required: true,
+        minlength: 1,
+        trim: true
+    },
 });
 
 module.exports = {User};

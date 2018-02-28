@@ -6,6 +6,10 @@ var Note = mongoose.model('Note',{
         type: Number,
         required: true
     },
+    AppearanceReason: {
+        type: Number,
+        required: true
+    },
     JobSeekerID: {
         type: Number,
         required: true,
@@ -24,22 +28,14 @@ var Note = mongoose.model('Note',{
         type: Date,
         required: true
     },
-
-
-
-
-    AppearanceStatusID: {
-        type: Number,
-        required: true
-    },
-    PreviousAppearanceDate: {
-        type: Date
-    },
     NextAppearanceDate: {
         type: Date
     },
     NextAppearanceShiftID: {
-        type: Number
+        type: string
+    },
+    PreviousAppearanceDate: {
+        type: Date
     },
     QueueNumber: {
         type: Number,
@@ -55,7 +51,6 @@ var Note = mongoose.model('Note',{
     ClarkLastName: {
         type: String
     }
-
 });
 
 module.exports = {Note};
