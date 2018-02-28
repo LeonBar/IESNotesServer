@@ -55,12 +55,14 @@ app.post('/GetNotes',(req,res) => {
     note.save().then((note) => {
        console.log(`Jobseeker ${note.JobSeekerID} Note was saved. (id: ${note._id})`);
     },(e) => {
-       res.status(400).send(e);
+       console.log(`Warning! Jobseeker ${note.JobSeekerID} Note wasn't saved.)`);
+       //res.status(400).send(e);
     });
 
     // See documentation on defining a message payload.
     var message = {
-        data: req.body,
+        data: req.body
+        ,
         notification:{
             body: 'Notification body'
         },

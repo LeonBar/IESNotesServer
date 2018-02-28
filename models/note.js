@@ -32,7 +32,7 @@ var Note = mongoose.model('Note',{
         type: Date
     },
     NextAppearanceShiftID: {
-        type: string
+        type: String
     },
     PreviousAppearanceDate: {
         type: Date
