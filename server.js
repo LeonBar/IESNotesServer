@@ -1,12 +1,22 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 const fs = require('fs');
-
+var admin = require('firebase-admin');
+var serviceAccount = require('./fireBase/firebase-keys.json');
 var {mongoose} = require("./db/mangoos");
 var{Note} = require("./models/note");
 
+const port = process.env.PORT || 3000;
+
+//FireBase
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://iesnet-de727.firebaseio.com'
+});
+
 var app = express();
 
+//Makes log about requests
 app.use((req,res,next) => {
     var now = new Date().toString();
     var log = `${now}: ${req.method} ${req.url}`;
@@ -21,20 +31,25 @@ app.use((req,res,next) => {
 
 app.use(bodyParser.json());
 
-app.post('/Notes',(req,res) => {
+app.post('/GetNotes',(req,res) => {
+    // The topic name can be optionally prefixed with "/topics/".
+    var topic = 'IES';
+
     var note = new Note({
-        JobSeekerID : req.body.JobSeekerID,
         NoteStatusID: req.body.NoteStatusID,
-        AppearanceStatusID: req.body.AppearanceStatusID,
+        AppearanceReason : req.body.AppearanceReason,
+        JobSeekerID : req.body.JobSeekerID,
+        FirsName: req.body.FirsName,
+        LastName: req.body.LastName,
+        AppearanceDate: req.body.AppearanceDate,
+        PreviousAppearanceDate: req.body.PreviousAppearanceDate,
+        NextAppearanceDate: req.body.NextAppearanceDate,
+        NextAppearanceShiftID: req.body.NextAppearanceShiftID,
+
         ClarkFirstName: req.body.ClarkFirstName,
         ClarkLastName: req.body.ClarkLastName,
         ClarkStendNumber: req.body.ClarkStendNumber,
         QueueNumber: req.body.QueueNumber,
-        FirsName: req.body.FirsName,
-        LastName: req.body.LastName,
-        PreviousAppearanceDate: req.body.PreviousAppearanceDate,
-        NextAppearanceDate: req.body.NextAppearanceDate,
-        NextAppearanceShiftID: req.body.NextAppearanceShiftID
     });
 
     note.save().then((note) => {
@@ -42,23 +57,29 @@ app.post('/Notes',(req,res) => {
     },(e) => {
        res.status(400).send(e);
     });
+
+    // See documentation on defining a message payload.
+    var message = {
+        data: req.body
+        ,
+        notification:{
+            body: 'Notification body'
+        },
+        topic: topic
+        };
+
+    // Send a message to devices subscribed to the provided topic.
+    admin.messaging().send(message)
+    .then((response) => {
+        // Response is a message ID string.
+        res.status(200).send('Successfully sent message:'+ response);
+    })
+    .catch((error) => {
+        res.status(404).send('Error sending message:'+ error);
+    });
 });
 
-app.listen(3000,() => {
-    console.log('IESNotes server is running on port : 3000');
-});
+app.listen(port, ()=>{
+    console.log('IESNotes server is running on port : ', port);
 
-// var newNote = new Note({
-//     JobSeekerID: 40264,
-//     NoteStatusID: 1,
-//     AppearanceStatusID: 1,
-//     ClarkFirstName: "לאון",
-//     ClarkLastName: "ברקן",
-//     ClarkStendNumber: 18,
-//     QueueNumber: 1801,
-//     FirsName: "ישראל",
-//     LastName: "ישראלי",
-//     PreviousAppearanceDate: "2018-01-02 15:43",
-//     NextAppearanceDate: "2018-01-03",
-//     NextAppearanceShiftID: 3
-// });
+});
