@@ -17,5 +17,11 @@
     "git": "^0.1.5",
     "heroku": "^0.2.0",
     "mongoose": "^5.0.6"
+  },
+  "devDependencies": {
+    "expect": "^22.4.0",
+    "mocha": "^5.0.1",
+    "nodemon": "^1.17.1",
+    "supertest": "^3.0.0"
   }
 }
