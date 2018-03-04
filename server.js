@@ -2,16 +2,19 @@ var express = require('express');
 var bodyParser = require('body-parser');
 const fs = require('fs');
 var admin = require('firebase-admin');
-var serviceAccount = require('./fireBase/firebase-keys.json');
-var {mongoose} = require("./db/mangoos");
+
 var{Note} = require("./models/note");
+var{User} = require("./models/user");
+var {mongoose} = require("./db/mangoos");
+var serviceAccount = require('./fireBase/firebase-keys.json');
 
 const port = process.env.PORT || 3000;
 
 //FireBase
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://iesnet-de727.firebaseio.com'
+    databaseURL: "https://iesdigital-79d3d.firebaseio.com"
+
 });
 
 var app = express();
@@ -31,9 +34,11 @@ app.use((req,res,next) => {
 
 app.use(bodyParser.json());
 
-app.post('/GetNotes',(req,res) => {
+app.post('/SendNote',(req,res) => {
     // The topic name can be optionally prefixed with "/topics/".
     var topic = 'IES';
+
+    console.log(`Saving JobSeekerID: ${req.body.JobSeekerID} note to mongoDB.`);
 
     var note = new Note({
         NoteStatusID: req.body.NoteStatusID,
@@ -55,7 +60,7 @@ app.post('/GetNotes',(req,res) => {
     note.save().then((note) => {
        console.log(`Jobseeker ${note.JobSeekerID} Note was saved. (id: ${note._id})`);
     },(e) => {
-       console.log(`Warning! Jobseeker ${note.JobSeekerID} Note wasn't saved.)`);
+       console.log(`Warning! Jobseeker ${note.JobSeekerID} Note wasn't saved.)`,e);
        //res.status(400).send(e);
     });
 
@@ -77,6 +82,22 @@ app.post('/GetNotes',(req,res) => {
     })
     .catch((error) => {
         res.status(404).send('Error sending message:'+ error);
+    });
+});
+
+app.post('/SetUser',(req,res) => {
+
+    var user = new User({
+        JobSeekerIdentityCard: req.body.JobSeekerIdentityCard,
+        MobileNumber: req.body.MobileNumber,
+        JobSeekerID:req.body.JobSeekerID
+    });
+
+    user.save().then((user) => {
+       console.log(`User ${user.JobSeekerID} was saved. (id: ${note._id})`);
+    },(e) => {
+       console.log(`Warning! User ${user.JobSeekerID} wasn't saved.)`,e);
+       //res.status(400).send(e);
     });
 });
 
