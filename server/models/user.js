@@ -9,7 +9,7 @@ var User = mongoose.model('User',{
         trim: true
     },
     MobileNumber: {
-        type: Number,
+        type: String,
         required: true,
         minlength: 1,
         trim: true

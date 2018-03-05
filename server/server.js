@@ -5,7 +5,7 @@ var admin = require('firebase-admin');
 
 var {Note} = require("./models/note");
 var {User} = require("./models/user");
-var {mongoose} = require("./db/mangoos");
+var {mongoose} = require("./db/mongoos");
 var serviceAccount = require('./fireBase/firebase-keys.json');
 
 const port = process.env.PORT || 3000;
