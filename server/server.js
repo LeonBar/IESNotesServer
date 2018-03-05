@@ -2,6 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 const fs = require('fs');
 var admin = require('firebase-admin');
+const {ObjectID} = require('mongodb');
+
 
 var {Note} = require("./models/note");
 var {User} = require("./models/user");
@@ -34,11 +36,14 @@ app.use((req,res,next) => {
 
 app.use(bodyParser.json());
 
+//Save note do database and send it to user by FCM service
 app.post('/notes',(req,res) => {
     // The topic name can be optionally prefixed with "/topics/".
     var topic = 'IES';
 
     console.log(`Saving JobSeekerID: ${req.body.JobSeekerID} note to mongoDB.`);
+
+    var mongoID;
 
     var note = new Note({
         NoteStatusID: req.body.NoteStatusID,
@@ -58,8 +63,8 @@ app.post('/notes',(req,res) => {
     });
 
     note.save().then((note) => {
-        res.send(note + '\nSuccessfully Added to database');
-       //console.log(`Jobseeker ${note.JobSeekerID} Note was saved. (id: ${note._id})`);
+        req.body.mongoID = note._id;
+        res.send(`\nSuccessfully ${JSON.stringify(req.body,undefined,2)}`);
     },(e) => {
        res.status(400).send(e);
     });
@@ -69,6 +74,7 @@ app.post('/notes',(req,res) => {
         data: req.body
         ,
         notification:{
+            title: 'שלום' + note.FirsName,
             body: 'Notification body'
         },
         topic: topic
@@ -85,6 +91,7 @@ app.post('/notes',(req,res) => {
     });
 });
 
+//set new user to database
 app.post('/setUser',(req,res) => {
 
     var user = new User({
@@ -101,11 +108,30 @@ app.post('/setUser',(req,res) => {
     });
 });
 
+//get all notes
 app.get('/notes',(req,res) => {
     Note.find().then((notes) => {
         res.send({notes});
     }, (e) => {
         res.status(400).send(e);
+    })
+});
+
+//get note by id
+app.get('/notes/:id',(req,res) => {
+    var id = req.params.id;
+    
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+}
+    Note.findById(id).then((note) => {
+        if(!note) {
+            res.status(200).send('Note not exist');
+        } else {
+        res.send({note});
+        }
+    }, (e) => {
+        res.status(400).send();
     })
 });
 

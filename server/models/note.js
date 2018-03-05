@@ -50,6 +50,9 @@ var Note = mongoose.model('Note',{
     },
     ClarkLastName: {
         type: String
+    },
+    mongoID: {
+        type: String
     }
 });
 
