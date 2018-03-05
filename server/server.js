@@ -4,7 +4,6 @@ const fs = require('fs');
 var admin = require('firebase-admin');
 const {ObjectID} = require('mongodb');
 
-
 var {Note} = require("./models/note");
 var {User} = require("./models/user");
 var {mongoose} = require("./db/mongoos");
@@ -126,7 +125,7 @@ app.get('/notes/:id',(req,res) => {
 }
     Note.findById(id).then((note) => {
         if(!note) {
-            res.status(200).send('Note not exist');
+            res.status(404).send('Note not exist');
         } else {
         res.send({note});
         }
