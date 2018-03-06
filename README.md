@@ -1,49 +1,43 @@
-**Return Notes**
-----
-  Returns all notes.
+FORMAT: 1A
 
-* **URL**
+# Resource and Actions API
+This API example demonstrates how to define a resource with multiple actions.
 
-  /notes
+## API Blueprint
++ [Previous: The Simplest API](01.%20Simplest%20API.md)
++ [This: Raw API Blueprint](https://raw.github.com/apiaryio/api-blueprint/master/examples/02.%20Resource%20and%20Actions.md)
++ [Next: Named Resource and Actions](03.%20Named%20Resource%20and%20Actions.md)
 
-* **Method:**
+# /message
+This is our [resource](http://www.w3.org/TR/di-gloss/#def-resource). It is
+defined by its
+[URI](http://www.w3.org/TR/di-gloss/#def-uniform-resource-identifier) or, more
+precisely, by its [URI Template](http://tools.ietf.org/html/rfc6570).
 
-  `GET`
-  
-*  **URL Params**
+This resource has no actions specified but we will fix that soon.
 
-   **Required:**
- 
-   `id=[integer]`
+## GET
+Here we define an action using the `GET` [HTTP request method](http://www.w3schools.com/tags/ref_httpmethods.asp) for our resource `/message`.
 
-* **Data Params**
+As with every good action it should return a
+[response](http://www.w3.org/TR/di-gloss/#def-http-response). A response always
+bears a status code. Code 200 is great as it means all is green. Responding
+with some data can be a great idea as well so let's add a plain text message to
+our response.
 
-  None
++ Response 200 (text/plain)
 
-* **Success Response:**
+        Hello World!
 
-  * **Code:** 200 <br />
-    **Content:** `{ id : 12, name : "Michael Bloom" }`
- 
-* **Error Response:**
+## PUT
+OK, let's add another action. This time to put new data to our resource
+(essentially an update action). We will need to send something in a
+[request](http://www.w3.org/TR/di-gloss/#def-http-request) and then send a
+response back confirming the posting was a success (_HTTP Status Code 204 ~
+Resource updated successfully, no content is returned_).
 
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "User doesn't exist" }`
++ Request (text/plain)
 
-  OR
+        All your base are belong to us.
 
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-  ```javascript
-    $.ajax({
-      url: "/users/1",
-      dataType: "json",
-      type : "GET",
-      success : function(r) {
-        console.log(r);
-      }
-    });
-  ```
++ Response 204
