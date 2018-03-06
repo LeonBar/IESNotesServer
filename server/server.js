@@ -96,7 +96,6 @@ app.post('/notes',(req,res) => {
     // Send a message to devices subscribed to the provided topic.
     admin.messaging().send(message)
     .then((response) => {
-        // Response is a message ID string.
         res.status(200).send('Note sent Successfully: '+ response);
     })
     .catch((error) => {
@@ -144,11 +143,10 @@ app.get('/notes',(req,res) => {
     })
 });
 
-//get note by id
+//get note by mongoDB id
 app.get('/notes/:id',(req,res) => {
-    var id = req.params.id;
     
-    if(!ObjectID.isValid(id)) {
+    if(!ObjectID.isValid(req.params.id)) {
         return res.status(404).send();
 }
     Note.findById(id).then((note) => {
@@ -156,6 +154,20 @@ app.get('/notes/:id',(req,res) => {
             res.status(404).send('Note not exist');
         } else {
         res.send({note});
+        }
+    }, (e) => {
+        res.status(400).send();
+    })
+});
+
+//Get all jobseeker notes
+app.get('/notes/jobseeker/:id',(req,res) => {
+    
+    Note.find({JobSeekerID:req.params.id}).then((notes) => {
+        if(!notes) {
+            res.status(404).send('Notes not exist');
+        } else {
+            res.send({notes});
         }
     }, (e) => {
         res.status(400).send();
