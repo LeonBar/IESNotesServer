@@ -1,13 +1,14 @@
-FORMAT: 2A
-
 # IESNotes API
 Internal API service.
 
 # GET /notes
-This is our [resource](http://www.w3.org/TR/di-gloss/#def-resource). It is
-defined by its
-[URI](http://www.w3.org/TR/di-gloss/#def-uniform-resource-identifier) or, more
-precisely, by its [URI Template](http://tools.ietf.org/html/rfc6570).
+This route will return all existing notes
+
++ Response 200 (application/json)
+
+        {
+                ID:id
+        }
 
 This resource has no actions specified but we will fix that soon.
 
