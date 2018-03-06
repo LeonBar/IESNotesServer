@@ -16,17 +16,9 @@ var Note = mongoose.model('Note',{
         minlength: 1,
         trim: true
     },
-    FirsName: {
-        type: String,
-        trim: true
-    },
-    LastName: {
-        type: String,
-        trim: true
-    },
     AppearanceDate: {
         type: Date,
-        required: true
+        required: true   
     },
     NextAppearanceDate: {
         type: Date
@@ -45,14 +37,20 @@ var Note = mongoose.model('Note',{
         type: Number,
         min: 0
     },
-    ClarkFirstName: {
+    ClerkName: {
         type: String
     },
     ClarkLastName: {
         type: String
     },
-    mongoID: {
+    MongoID: {
         type: String
+    },
+    MobileNumber: {
+        type: String,
+        required: true,
+        minlength: 1,
+        trim: true
     }
 });
 

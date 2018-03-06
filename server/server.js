@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 //FireBase
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://iesdigital-79d3d.firebaseio.com"
+    databaseURL: 'https://ies-cell.firebaseio.com'
 
 });
 
@@ -37,43 +37,57 @@ app.use(bodyParser.json());
 
 //Save note do database and send it to user by FCM service
 app.post('/notes',(req,res) => {
-    // The topic name can be optionally prefixed with "/topics/".
-    var topic = 'IES';
 
     console.log(`Saving JobSeekerID: ${req.body.JobSeekerID} note to mongoDB.`);
-
-    var mongoID;
 
     var note = new Note({
         NoteStatusID: req.body.NoteStatusID,
         AppearanceReason : req.body.AppearanceReason,
         JobSeekerID : req.body.JobSeekerID,
-        FirsName: req.body.FirsName,
-        LastName: req.body.LastName,
         AppearanceDate: req.body.AppearanceDate,
         PreviousAppearanceDate: req.body.PreviousAppearanceDate,
         NextAppearanceDate: req.body.NextAppearanceDate,
         NextAppearanceShiftID: req.body.NextAppearanceShiftID,
+        MobileNumber: req.body.MobileNumber,
 
-        ClarkFirstName: req.body.ClarkFirstName,
-        ClarkLastName: req.body.ClarkLastName,
+        ClerkName: req.body.ClarkFirstName,
         ClarkStendNumber: req.body.ClarkStendNumber,
         QueueNumber: req.body.QueueNumber,
     });
 
+    var topic = req.body.JobSeekerID;
+    
+    console.log(`topic: ${topic}`);
+
+    //save to mongoDB
     note.save().then((note) => {
-        req.body.mongoID = note._id;
-        res.send(`\nSuccessfully ${JSON.stringify(req.body,undefined,2)}`);
+        req.body.MongoID = note._id;
+        res.send(`\n${JSON.stringify(req.body,undefined,2)}\nSaved to Database`);
     },(e) => {
        res.status(400).send(e);
     });
+
+    //save user if not exist.
+    User.findOne({JobSeekerID:req.body.JobSeekerID}).then((user) => 
+    {
+    if(!user) {
+        var user = new User ({
+            JobSeekerID: req.body.JobSeekerID,
+            JobSeekerIdentityCard: req.body.JobSeekerIdentityCard,
+            MobileNumber: req.body.MobileNumber
+        });
+        user.save();
+        console.log(`User: ${JobSeekerID} Saved`);
+    }
+    console.log(`User: ${req.body.JobSeekerID} exist`);
+    });
+
 
     // See documentation on defining a message payload.
     var message = {
         data: req.body
         ,
         notification:{
-            title: 'שלום' + note.FirsName,
             body: 'Notification body'
         },
         topic: topic
@@ -83,11 +97,26 @@ app.post('/notes',(req,res) => {
     admin.messaging().send(message)
     .then((response) => {
         // Response is a message ID string.
-        res.status(200).send('Successfully sent message:'+ response);
+        res.status(200).send('Note sent Successfully: '+ response);
     })
     .catch((error) => {
-        res.status(404).send('Error sending message:'+ error);
+        res.status(404).send('Error sending Note:'+ error);
     });
+});
+
+app.post('/userValidation',(req,res)=> {
+
+    User.findOne({
+        JobSeekerID: req.body.JobSeekerID,
+        MobileNumber: req.body.MobileNumber
+    }).then((user) => 
+    {
+    if(!user) {
+     res.send({IsValid:false});
+    }
+    res.send({IsValid:true});
+    });
+
 });
 
 //set new user to database

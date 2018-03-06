@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 var User = mongoose.model('User',{
 
-    JobSeekerIdentityCard: {
+    JobSeekerID: {
         type: Number,
         required: true,
         minlength: 1,
@@ -13,13 +13,7 @@ var User = mongoose.model('User',{
         required: true,
         minlength: 1,
         trim: true
-    },
-    JobSeekerID: {
-        type: Number,
-        required: true,
-        minlength: 1,
-        trim: true
-    },
+    }
 });
 
 module.exports = {User};
