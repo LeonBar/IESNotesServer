@@ -88,7 +88,7 @@ app.post('/notes',(req,res) => {
         data: req.body
         ,
         notification:{
-            body: 'Notification body'
+            body: 'פתח הודאה זו להצגת הפתקית'
         },
         topic: topic
     };
@@ -123,7 +123,6 @@ app.post('/userValidation',(req,res)=> {
 app.post('/setUser',(req,res) => {
 
     var user = new User({
-        JobSeekerIdentityCard: req.body.JobSeekerIdentityCard,
         MobileNumber: req.body.MobileNumber,
         JobSeekerID:req.body.JobSeekerID
     });
