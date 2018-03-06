@@ -1,4 +1,4 @@
-FORMAT: 1A
+FORMAT: 2A
 
 # IESNotes API
 Internal API service.
