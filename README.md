@@ -1,14 +1,9 @@
 FORMAT: 1A
 
-# Resource and Actions API
-This API example demonstrates how to define a resource with multiple actions.
+# IESNotes API
+Internal API service.
 
-## API Blueprint
-+ [Previous: The Simplest API](01.%20Simplest%20API.md)
-+ [This: Raw API Blueprint](https://raw.github.com/apiaryio/api-blueprint/master/examples/02.%20Resource%20and%20Actions.md)
-+ [Next: Named Resource and Actions](03.%20Named%20Resource%20and%20Actions.md)
-
-# /message
+# GET /notes
 This is our [resource](http://www.w3.org/TR/di-gloss/#def-resource). It is
 defined by its
 [URI](http://www.w3.org/TR/di-gloss/#def-uniform-resource-identifier) or, more
