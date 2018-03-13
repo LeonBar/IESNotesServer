@@ -1,13 +1,10 @@
-MalamTeam
-
-
 ##IESNotes API
 March 07, 2018
 
 ##Overview
 API for Internal Biometric station use
 
-Set User
+#Set User
 Set new user to API database.
 
 URL | /user
@@ -15,10 +12,12 @@ Method | POST
 
 Data type | application/json
 Data Params | 
-jobseekerID [Number] [ Required ], 
-MobileNumber [string] [ Required ], 
+Required: jobseekerID [Number],MobileNumber [string]
+
 Success Response | Code: 200
+
 Error Response | Code: 404
+
 Sample Call
   {
   url: "/user",
